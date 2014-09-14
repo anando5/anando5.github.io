@@ -1,444 +1,321 @@
 <!DOCTYPE html>
-<html itemscope itemtype="http://schema.org/Map">
-  <head>
-    
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<meta itemprop="name" content="Denuncias PAOT-BJ">
-<meta itemprop="description"
-	content="A data visualization of PAOT disruptions in BJ">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
 
-<title>Denuncias PAOT-BJ</title>
+<title>Paot.R</title>
 
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
 
-<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"
-	type="text/css">
-<link rel="stylesheet" href="bootstrap/css/bootstrap-responsive.min.css"
-	type="text/css">
-<link rel="stylesheet" href="toastr/toastr.css" type="text/css">
-<link rel="stylesheet" href="toastr/toastr-responsive.css"
-	type="text/css">
-<link rel="stylesheet" href="styles/screen.css" type="text/css">
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
 
-<script type="text/javascript"
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+h1 { 
+   font-size:2.2em; 
+}
 
-<script type="text/javascript"
-	src="http://maps.googleapis.com/maps/api/js?key=AIzaSyA37Km7wZm59XH0-U1Yiu3I5OVMEF1FR1Y&sensor=false"></script>
+h2 { 
+   font-size:1.8em; 
+}
 
-<script type="text/javascript" src="timemap/mxn/mxn.js?(googlev3)"></script>
-<script type="text/javascript" src="timemap/timeline-2.3.0.js"></script>
-<script type="text/javascript" src="timemap/timemap_full.pack.js"></script>
-<script type="text/javascript" src="js/frtimemap.js"></script>
+h3 { 
+   font-size:1.4em; 
+}
 
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: rgb(88, 72, 246)
+   }
+
+   pre .number {
+     color: rgb(0, 0, 205);
+   }
+
+   pre .comment {
+     color: rgb(76, 136, 107);
+   }
+
+   pre .keyword {
+     color: rgb(0, 0, 255);
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: rgb(3, 106, 7);
+   }
+</style>
+
+<!-- R syntax highlighter -->
 <script type="text/javascript">
-	var _gaq = _gaq || [];
-	_gaq.push([ '_setAccount', 'UA-28949207-1' ]);
-	_gaq.push([ '_trackPageview' ]);
-
-	(function() {
-		var ga = document.createElement('script');
-		ga.type = 'text/javascript';
-		ga.async = true;
-		ga.src = ('https:' == document.location.protocol ? 'https://ssl'
-				: 'http://www')
-				+ '.google-analytics.com/ga.js';
-		var s = document.getElementsByTagName('script')[0];
-		s.parentNode.insertBefore(ga, s);
-	})();
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
 </script>
 
 
 
 
+</head>
 
+<body>
+<!-- Automatically generated by RStudio [12861c30b10411e1afa60800200c9a66] -->
 
+<h3>Paot.R</h3>
 
-<!--Load the AJAX API-->
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript">
+<p>anando &mdash; <em>Aug 14, 2014, 10:02 PM</em></p>
 
-      // Load the Visualization API and the piechart package.
-      google.load('visualization', '1.0', {'packages':['corechart']});
+<pre><code class="r">Bjpaot &lt;- read.csv(&quot;BJtodo.csv&quot;, header = T)
+head (Bjpaot)
+</code></pre>
 
-      // Set a callback to run when the Google Visualization API is loaded.
-      google.setOnLoadCallback(drawChart);
+<pre><code>           Expediente      medio                tema      delegacion
+1  PAOT-2013-20-SOT-9   Internet Uso de Suelo Urbano Benito Juï¿½rez
+2 PAOT-2013-40-SOT-20   Internet Ruido y Vibraciones Benito Juï¿½rez
+3 PAOT-2013-49-SPA-27 Telï¿½fono            Animales Benito Juï¿½rez
+4 PAOT-2013-57-SOT-25   Internet Uso de Suelo Urbano Benito Juï¿½rez
+5 PAOT-2013-64-SPA-34 Telï¿½fono Ruido y Vibraciones Benito Juï¿½rez
+6 PAOT-2013-69-SPA-37   Internet            Animales Benito Juï¿½rez
+            colonia
+1         DEL VALLE
+2         DEL VALLE
+3 SANTA CRUZ ATOYAC
+4            ALAMOS
+5      LETRAN VALLE
+6          NARVARTE
+</code></pre>
 
-      // Callback that creates and populates a data table, 
-      // instantiates the pie chart, passes in the data and
-      // draws it.
-      function drawChart() {
+<pre><code class="r">summary(Bjpaot)
+</code></pre>
 
-        // Create the data table.
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Topping');
-        data.addColumn('number', 'Slices');
-        data.addRows([
-          ['Uso Suelo', 74],
-          ['Ruido', 57],
-          ['Ares Verdes', 44], 
-          ['Animales', 29],
-          ['Residuos', 5], 
-          ['Gases Vapores', 5],
-          ['Areas Naturales', 4],
-          ['Areas Valor Ambiental', 3], 
-          ['Aire', 2],
-          ['Agua', 1], 
-        ]);
+<pre><code>                  Expediente 
+ PAOT-2013-1000-SOT-465:  1  
+ PAOT-2013-1008-SPA-538:  1  
+ PAOT-2013-101-SPA-61  :  1  
+ PAOT-2013-1027-SOT-479:  1  
+ PAOT-2013-1035-SPA-553:  1  
+ PAOT-2013-1049-SPA-565:  1  
+ (Other)               :218  
+                                                                  medio   
+ Archivo PAOT                                                        : 9  
+ Consejo Ciudadano de Seguridad Pï¿½blica y Procuraciï¿½n de Justicia: 1  
+ Escrita                                                             :17  
+ Internet                                                            :79  
+ Personal                                                            :27  
+ Telï¿½fono                                                          :91  
 
-        // Set chart options
-        var options = {'title':'Denuncias por Tema en BJ solo 2013',
-                       'width':450,
-                       'height':350};
- 
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+                               tema              delegacion 
+ Uso de Suelo Urbano             :74   Benito Juï¿½rez:224  
+ Ruido y Vibraciones             :57                        
+ ï¿½reas Verdes (en suelo urbano):44                        
+ Animales                        :29                        
+ Gases Olores y Vapores          : 5                        
+ Residuos                        : 5                        
+ (Other)                         :10                        
+                 colonia  
+ DEL VALLE           :55  
+ NARVARTE            :20  
+ NAPOLES             :17  
+ SAN JOSE INSURGENTES:14  
+ PORTALES            :13  
+ INSURGENTES MIXCOAC :10  
+ (Other)             :95  
+</code></pre>
 
-        function selectHandler() {
-          var selectedItem = chart.getSelection()[0];
-          if (selectedItem) {
-            var topping = data.getValue(selectedItem.row, 0);
-            alert('The user selected ' + topping);
-          }
-        }
+<pre><code class="r">bj &lt;- c(74,57,44,29,5,5,4,3,2,1)
+plot (bj)
+</code></pre>
 
-        google.visualization.events.addListener(chart, 'select', selectHandler);    
-        chart.draw(data, options);
-      }
+<p><img src="figure-compile-notebook-12861c30b/unnamed-chunk-11.png" alt="plot of chunk unnamed-chunk-1"/> </p>
 
-    </script>
+<pre><code class="r">summary (bj)
+</code></pre>
 
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   1.00    3.25    5.00   22.40   40.20   74.00 
+</code></pre>
 
+<pre><code class="r">sd (bj)
+</code></pre>
 
-<script type="text/javascript">
-    google.load("visualization", "1", {packages:["corechart"]});
-    google.setOnLoadCallback(drawChart);
-    function drawChart() {
-      var data = google.visualization.arrayToDataTable([
-	["Element", "Density", { role: "style" } ],
-        ["Telefono", 91, "red"],
-	["Internet", 79, "gold"],
-	["Personal", 27, "green"],
-	["Escrita", 17, "color: silver"],
-      ["Archivo PAOT", 9, "color: #e5e4e2"],
-      ["Consejo Ciudadano", 1, "color: #e5e4e2"],
+<pre><code>[1] 27.01
+</code></pre>
 
+<pre><code class="r">var(bj)
+</code></pre>
 
-      ]);
+<pre><code>[1] 729.4
+</code></pre>
 
-      var view = new google.visualization.DataView(data);
-      view.setColumns([0, 1,
-                       { calc: "stringify",
-                         sourceColumn: 1,
-                         type: "string",
-                         role: "annotation" },
-                       2]);
+<pre><code class="r">names(Bjpaot)
+</code></pre>
 
-      var options = {
-	title: "Denuncias por medio en BJ solo 2013",
-	width: 500,
-	height: 300,
-	bar: {groupWidth: "95%"},
-        legend: { position: "none" },
-      };
-      var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
-      chart.draw(view, options);
-  }
-  </script>
+<pre><code>[1] &quot;Expediente&quot; &quot;medio&quot;      &quot;tema&quot;       &quot;delegacion&quot; &quot;colonia&quot;   
+</code></pre>
 
+<pre><code class="r">table (Bjpaot$tema)
+</code></pre>
 
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript">
-      google.load("visualization", "1", {packages:["corechart"]});
-      google.setOnLoadCallback(drawChart);
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Año', 'Denuncias', ],
-          ['2002',  7,  ],
-          ['2003',  59,   ],
-          ['2004',  78,    ],
-		  ['2005',  135,  ],
-          ['2006',  115,   ],
-          ['2007',  133,    ],
-		  ['2008',  136,  ],
-          ['2009',  175,   ],
-          ['2010',  205,    ],
-		  ['2011',  243,  ],
-          ['2012',  318,   ],
-          ['2013',  224,   ]
-        ]);
+<pre><code>
+                            Agua                             Aire 
+                               1                                2 
+                        Animales           Gases Olores y Vapores 
+                              29                                5 
+      ï¿½reas de Valor Ambiental     ï¿½reas Naturales Protegidas 
+                               3                                4 
+ï¿½reas Verdes (en suelo urbano)                         Residuos 
+                              44                                5 
+             Ruido y Vibraciones              Uso de Suelo Urbano 
+                              57                               74 
+</code></pre>
 
-        var options = {
-          title: 'Denuncias PAOT desde 2002 al 2013 en BJ',
-          hAxis: {title: 'Año', titleTextStyle: {color: 'red'}}
-        };
+<pre><code class="r">plot (Bjpaot$tema~ Bjpaot$medio)
+</code></pre>
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
-        chart.draw(data, options);
-      }
-    </script>
-  
-  
-   
-  
-  
-  
-  
+<p><img src="figure-compile-notebook-12861c30b/unnamed-chunk-12.png" alt="plot of chunk unnamed-chunk-1"/> </p>
 
+<pre><code class="r">sessionInfo()
+</code></pre>
 
-  </head>
-  <body>
-     <!-- BEGIN Javascript SDK for Facebook Like Button HTML5 Plugin -->
-	<div id="fb-root"></div>
-	<script>
-		(function(d, s, id) {
-			var js, fjs = d.getElementsByTagName(s)[0];
-			if (d.getElementById(id))
-				return;
-			js = d.createElement(s);
-			js.id = id;
-			js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1";
-			fjs.parentNode.insertBefore(js, fjs);
-		}(document, 'script', 'facebook-jssdk'));
-	</script>
-	<!-- END Javascript SDK for Facebook Like Button HTML5 Plugin -->
+<pre><code>R version 3.1.0 (2014-04-10)
+Platform: i386-w64-mingw32/i386 (32-bit)
 
+locale:
+[1] LC_COLLATE=Spanish_Mexico.1252  LC_CTYPE=Spanish_Mexico.1252   
+[3] LC_MONETARY=Spanish_Mexico.1252 LC_NUMERIC=C                   
+[5] LC_TIME=Spanish_Mexico.1252    
 
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
 
-<!-- BEGIN Top nav bar -->
-	<div class="navbar">
-		<div class="navbar-inner">
-			<div class="container">
-			
-			
-				<!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-				<a class="btn btn-navbar" data-toggle="collapse"
-					data-target=".nav-collapse"> 
-					<span class="icon-bar"></span> 
-					<span class="icon-bar"></span> 
-					<span class="icon-bar"></span>
-				</a> 
-			
-			
-				<a class="brand" href="index.html">Denuncias PAOT-BJ</a>
-			
-				
-				<div class="nav-collapse collapse">
-				
-				
-					<ul class="nav">
-						<li class="active"><a href="index.html">Mapa</a></li>
-						<li class="dropdown"><a class="dropdown-toggle"
-							data-toggle="dropdown" href="#">Panorama <b class="caret"></b>
-						</a>
-							<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-								<li><a href="vision.html">Vision</a></li>
-								<li><a href="major-disruptions.html">Major Disruptions</a></li>
-	
-								<li class="nav-header">Rail Line</li>
-								<li><a href="line.html">Line Fault</a></li>
-								<li><a href="length-of-delay.html">Length of Delay</a></li>
-							</ul></li>
-						<li class="dropdown"><a class="dropdown-toggle"
-							data-toggle="dropdown" href="#">Reports <b class="caret"></b>
-						</a>
-							<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-								<li class="nav-header">Service Reliability</li>
-								<li><a href="train-faults-halved.html">Train Faults
-										Halved?</a></li>
-								<li><a href="newlines.html">New Rail Lines</a></li>
-								<li><a href="fines.html">Fine Lines</a></li>
-								<li class="divider"></li>
-								<li><a href="ebutton.html">Emergency Button Activations</a></li>
-							</ul></li>
-						
-						
-						<li><a
-							href="https://docs.google.com/folder/d/0B0dFf0ojY-LPeTl5VnpGRzBTTzA/edit"
-							target="_blank">Archivo</a></li>
-						<li><a
-							href="https://www.google.com/fusiontables/DataSource?docid=1J7lftDwVlxBgLYsv0SYHZ9_7a28P7ynXXpejRgHz#summary:id=14"
-							target="_blank">Data</a></li>
-						<li> <a href="about.html">Acerca</a> </li>
-					</ul>
-					
-					
-					<div id="gplus-button" class="pull-right">
-						<!-- g-plusone button does not display properly if mixed with other css classes -->
-						<div class="g-plusone" data-size="medium"
-							data-href="http://.appspot.com/"></div>
-					</div>
-					<div id="tweet-button" class="pull-right">
-						<a href="https://twitter.com/share" class="twitter-share-button"
-							data-url="http://.appspot.com/"
-							data-text="Datos denuncias PAOT-BJ visualizacion denuncias en BJ">Tweet</a>
-					</div>
-					<div id="fb-like-button" class="pull-right">
-						<div class="fb-like" data-href="http://.appspot.com/"
-							data-send="false" data-layout="button_count"
-							data-show-faces="false"></div>
-					</div>
-				</div>
-				<!-- /.nav-collapse -->
-			
-			
-			</div>
-		</div>
-	</div>
-	<!-- END Top nav bar -->
+other attached packages:
+[1] knitr_1.6
 
+loaded via a namespace (and not attached):
+[1] evaluate_0.5.5 formatR_0.10   stringr_0.6.2  tools_3.1.0   
+</code></pre>
 
+</body>
 
-
-      <div class="container-fluid">
-
-		<div class="row-fluid">
-			<div class="span12">
-				<div id="linelegend" class="btn-group"
-					data-toggle="buttons-checkbox">
-					<a href="usosuelo.html"button type="button" class="btn active btn-green" id="ewl-filter"
-						value="East-West Line">Uso Suelo</button></a>
-					<a href="ruido.html"button type="button" class="btn active btn-danger" id="nsl-filter"
-						value="North-South Line">Ruido</button></a>
-					<a href="areasverdes.html"button type="button" class="btn active btn-purple" id="nel-filter"
-						value="North-East Line">Areas Verdes</button></a>
-					<a href="animales.html"button type="button" class="btn active btn-warning"
-						id="ccl-filter" value="Circle Line">Animales</button></a>
-					<a href="residuos.html"button type="button" class="btn active btn-cyan" id="bplrt-filter"
-						value="Bukit Panjang LRT">Residuos</button></a>
-					<a href="gasesvapores.html"button type="button" class="btn active btn-muskgrey"
-						id="pglrt-filter" value="Punggol LRT">Gases Vapores</button></a>
-                    <a href="areasnaturales.html"button type="button" class="btn active btn-grey"
-						id="p-filter" value="Punggol LRT">Areas Naturales</button></a>
-                    <a href="areasvalorambiental.html"button type="button" class="btn active btn-warning"
-						id="g-filter" value="Punggol LRT">Areas Valor Ambiental</button></a>
-                    <a href="aire.html"button type="button" class="btn active btn-muskgrey"
-						id="l-filter" value="Punggol LRT">Aire</button></a>
-
-                    <a href="agua.html"button type="button" class="btn active btn-muskgrey"
-						id="r-filter" value="Punggol LRT">Agua</button></a>
-
-
-				</div>
-
-				<p><p><br><a id="hello-world" href="#" class="btn" rel="popover"><i
-					class="icon-info-sign"></i> ࠑue es?</a> 
-				<a id="timeline-zoom-tip" href="#" class="btn"
-					rel="popover"><i class="icon-search"></i> Timeline
-					Zoom</a></p></p></br>
-			</div>
-		</div>
-
-
-
-
-
-
-
-
-
-
-<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-
-	<script type="text/javascript">
-		// Tooltip options
-		(function pageUI() {
-			var options = {
-				title : "Acercate a los datos",
-				placement : "bottom",
-				html : "false",
-				trigger : "hover",
-				content : "Adentrate"
-			};
-			$("#timeline-zoom-tip").popover(options);
-			options.title = "Hola!";
-			options.content = "Este sitio muestra infografias sobre las denuncias a PAOT en la Delegacion Benito Juarez.";
-			$("#hello-world").popover(options);
-
-			// Tooltip options
-			options = {
-				title : "/Muestra las graficas de uso de suelo",
-				placement : "bottom",
-				html : "false",
-				trigger : "hover"
-			};
-			$("#ewl-filter").tooltip(options);
-			options.title = "Muestra las graficas de Ruido"
-			$("#nsl-filter").tooltip(options);
-			options.title = "Muestra las graficas de Areas Verdes";
-			$("#nel-filter").tooltip(options);
-			options.title = "Muestra las graficas de Animales";
-			$("#ccl-filter").tooltip(options);
-			options.title = "Muestra las graficas de Residuos";
-			$("#bplrt-filter").tooltip(options);
-			options.title = "Muestra las graficas de Gases Vapores";
-			$("#pglrt-filter").tooltip(options);
-                  options.title = "Muestra las graficas de Areas Naturales";
-			$("#p-filter").tooltip(options);
-                  options.title = "Muestra las graficas de Areas Valor Ambiental";
-			$("#g-filter").tooltip(options);
-                  options.title = "Muestra las graficas de Aire";
-			$("#l-filter").tooltip(options);
-                  options.title = "Muestra las graficas de Agua";
-			$("#r-filter").tooltip(options);
-
-		})();
-	</script>
-
-	<script type="text/javascript" src="toastr/toastr.js"></script>
-
-	<!-- BEGIN js for tweet button -->
-	<script>
-		!function(d, s, id) {
-			var js, fjs = d.getElementsByTagName(s)[0];
-			if (!d.getElementById(id)) {
-				js = d.createElement(s);
-				js.id = id;
-				js.src = "//platform.twitter.com/widgets.js";
-				fjs.parentNode.insertBefore(js, fjs);
-			}
-		}(document, "script", "twitter-wjs");
-	</script>
-	<!-- END js for tweet button -->
-	<!-- BEGIN js for google +1 button -->
-	<script type="text/javascript">
-		(function() {
-			var po = document.createElement('script');
-			po.type = 'text/javascript';
-			po.async = true;
-			po.src = 'https://apis.google.com/js/plusone.js';
-			var s = document.getElementsByTagName('script')[0];
-			s.parentNode.insertBefore(po, s);
-		})();
-	</script>
-
-
-
-
-
-    <!--Div that will hold the pie chart-->
-    <div id="chart_div2" style="width: 900px; height: 500px;"></div>
-	<div id="chart_div" class="inline-top"; style="width:400; height:300"></div>
-    <div id="columnchart_values" class="inline-top"; "></div>
- 
-	
-    <iframe width="500" height="300" scrolling="no" frameborder="no" src="https://www.google.com/fusiontables/embedviz?containerId=googft-gviz-canvas&amp;viz=GVIZ&amp;t=GRAPH&amp;gc=true&amp;gd=false&amp;sdb=1&amp;rmax=100000&amp;q=select+col2%2C+col3+from+1J7lftDwVlxBgLYsv0SYHZ9_7a28P7ynXXpejRgHz&amp;qrs=+where+col2+%3E%3D+&amp;qre=+and+col2+%3C%3D+&amp;qe=&amp;uiversion=2&amp;state=%7B%22ps%22%3A%221_1_-2_0_0_-11_-e_2_-d_y_5_n_-n_3_q_e_4_-c_-12_6_1_-13_7_l_11_8_1b_-1_9_7_-1n_a_2a_9_%22%2C%22cx%22%3A-41.63399502960465%2C%22cy%22%3A14.519135737839235%2C%22sw%22%3A613.8340846293075%2C%22sh%22%3A255.8991698454633%2C%22z%22%3A1.4957287301569937%7D&amp;gco_forceIFrame=true&amp;gco_hasLabelsColumn=true&amp;att=true&amp;width=500&amp;height=285"></iframe>
-     <iframe width="900" height="700" scrolling="no" frameborder="no" src=" https://scontent-b-lax.xx.fbcdn.net/hphotos-xfp1/t1.0-9/q71/s720x720/10390040_10152472297384770_6783768166079121701_n.jpg " ></iframe>
-	
-<footer>
-<div style="display: block;" id="footer">
-        <div class="inner">
-            <ul class="footer-link-wrap ">
-                    <ul class="credits">
-                    <li>CC BY-NC 3.0 — Anando Purutama© 2014</li>  
-                    </div>
-                  </div>
-
-	</footer>
-
-
-
-    
-  </body>
 </html>
+
